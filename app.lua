@@ -6,6 +6,8 @@
    * 
 ]]
 
+local enet = require 'enet'
+
 local app = {}
 --state
 local menu_state = "network"
@@ -184,7 +186,6 @@ function set_up_physics_boxes()
   lovr.graphics.setBackgroundColor(.8, .8, .8)
 end
 
-
 function update_physics_boxes(dt)
   -- Update the physics simulation
   world:update(1 / 60)
@@ -233,6 +234,7 @@ function setup_menu_network()
     function()
       print("Host")
       menu_state="chat"
+      setup_server()
     end,
     lovr.math.newVec3(0, 1.0, -3)
   ))
@@ -241,6 +243,7 @@ function setup_menu_network()
     function()
       print("Join")
       menu_state="chat"
+      setup_client()
     end,
     lovr.math.newVec3(0, 0.5, -3)
   ))
@@ -269,24 +272,6 @@ function menu_network_draw(pass)
     -- Button text (add a small amount to the z to put the text slightly in front of button)
     pass:setColor(1, 1, 1)
     pass:text(button.text, button.position + vec3(0, 0, .001), button.textSize)
-  end
-end
-
-function pointer_hand(pass)
-  -- Pointers
-  for hand, tip in pairs(tips) do
-    local position = vec3(lovr.headset.getPosition(hand))
-
-    pass:setColor(1, 1, 1)
-    pass:sphere(position, .01)
-
-    if button.active then
-      pass:setColor(0, 1, 0)
-    else
-      pass:setColor(1, 0, 0)
-    end
-
-    pass:line(position, tip)
   end
 end
 
@@ -336,7 +321,97 @@ function menu_network_update()
   end
 end
 
+local host = nil
+local server = nil
 
+function setup_server()
+  host = enet.host_create('localhost:6789')
+  network_state = "server"
+end
+
+function ServerListen()
+  local event = host:service(100)
+  if event then
+    if event.type == 'receive' then
+      print('Got message: ', event.data, event.peer)
+      --event.peer:send(event.data)
+    elseif event.type == "connect" then
+      print(event.peer, "connected.")
+    elseif event.type == "disconnect" then
+      print(event.peer, "disconnected.")
+    end
+  end
+end
+
+function ServerSend()
+  print(host)
+  for peerIndex = 1, host:peer_count() do
+    local peer = host:get_peer(peerIndex)
+    if peer then
+      peer:send("Hi")
+    end
+  end
+end
+
+function setup_client()
+  host = enet.host_create()
+  server = host:connect('localhost:6789')
+  network_state = "client"
+end
+
+function ClientListen()
+  local event = host:service(100)
+  if event then
+    if event.type == 'connect' then
+      print('Connected to', event.peer)
+      --event.peer:send('hello world')
+    elseif event.type == 'receive' then
+      print('Got message: ', event.data, event.peer)
+      --done = true
+    elseif event.type == "disconnect" then
+      print(event.peer, "disconnected.")
+    end
+  end
+end
+
+function ClientClose()
+  server:disconnect()
+  host:flush()
+end
+
+function ClientSend()
+  host:service(100)
+  server:send("Hi")
+end
+
+function NetworkSend()
+  if network_state == "server" then
+    ServerSend()
+  end
+  if network_state == "client" then
+    ClientSend()
+  end
+end
+-- //////////////////////////////////////////////
+-- 
+-- //////////////////////////////////////////////
+function pointer_hand(pass)
+  -- Pointers
+  for hand, tip in pairs(tips) do
+    local position = vec3(lovr.headset.getPosition(hand))
+
+    pass:setColor(1, 1, 1)
+    pass:sphere(position, .01)
+
+    if button.active then
+      pass:setColor(0, 1, 0)
+    else
+      pass:setColor(1, 0, 0)
+    end
+
+    pass:line(position, tip)
+  end
+end
 -- //////////////////////////////////////////////
 -- CHAT
 -- //////////////////////////////////////////////
@@ -355,6 +430,7 @@ function setup_menu_chat()
     "Send",
     function()
       print("Ping")
+      NetworkSend()
     end,
     lovr.math.newVec3(0, 0.5, -3)
   ))
@@ -461,6 +537,12 @@ function app:init(args)
 end
 
 function app:update(dt)
+  if network_state == "server" then
+    ServerListen()
+  end
+  if network_state == "client" then
+    ClientListen()
+  end
   --update_ui()
   -- update_physics_boxes(dt)
   if menu_state == "network" then

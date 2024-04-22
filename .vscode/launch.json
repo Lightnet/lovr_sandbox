@@ -1,9 +1,18 @@
 {
   "version": "0.2.0",
   "configurations": [
-    {           
-      "env": {
-      }
+
+    {
+      "type": "lua-local",
+      "request": "launch",
+      "name": "Debug Lovr Executable",
+      "program": {
+        "command": "lovr"
+      },
+      "args": [
+        "--console",
+        "${workspaceFolder}"
+      ]
     }
   ]
 }

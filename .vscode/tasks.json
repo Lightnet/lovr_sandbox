@@ -15,11 +15,11 @@
         "command":"lovr --console ${workspaceRoot}"
       },
       //"args": [],
-      "problemMatcher": []
-      //"group": {
-        //"kind": "build",
-        //"isDefault": true
-      //}//,
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }//,
       //"presentation": {
         //"reveal": "always"
       //}
@@ -27,7 +27,17 @@
     {
       "label": "Lovr",
       "type": "shell",
-      "command": "lovr ${workspaceRoot} ",
+      "command": "lovr ${workspaceRoot}",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    },
+    {
+      "label": "Lovr_bat",
+      "type": "shell",
+      "command": "${workspaceRoot}\\lovr.bat",
       "problemMatcher": [],
       "group": {
         "kind": "build",

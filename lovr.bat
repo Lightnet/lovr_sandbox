@@ -1,3 +1,1 @@
-@echo off
-lovr --console .
-pause
+start lovr.exe --console .

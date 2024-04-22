@@ -19,6 +19,18 @@
 
   Read more on https://lovr.org
 
+# vscode:
+ Install Love2D Support.
+ settings.json
+```
+{
+  "pixelbyte.love2d.path": "path/lovr.exe"
+}
+```
+  Alt + L
+
+  Run Application.
+
 # run app:
   Install program. https://lovr.org Note there is no installer. Need to set path in system variable for testing.
 

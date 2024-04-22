@@ -2,7 +2,9 @@
 --[[
   
 ]]
-
+if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then
+  require("lldebugger").start()
+end
 local app = require 'app'
 
 function lovr.load(args)
@@ -12,7 +14,7 @@ function lovr.load(args)
   -- local width = lovr.system.getWindowHeight()
   -- local height = lovr.system.getWindowHeight()
   -- print("Width: " .. width .. " Height: " .. height)
-
+  -- model = lovr.graphics.newModel('assets/male_toon_block01.glb')
   -- print('loaded!')
   app:init(args)
 end
@@ -32,5 +34,7 @@ function lovr.draw(pass)
   --pass:text('hello world', 0, 1.7, -3, .5)
   --https://lovr.org/docs/Pass:cube
   --pass:cube(0, 1.7, -1, .5, lovr.headset.getTime(), 0, 1, 0, 'line')
+  --fila,x,y,z,scale
+  -- pass:draw(model, 0, 2, -3, 1)
   app:draw(pass)
 end

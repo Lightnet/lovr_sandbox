@@ -332,6 +332,7 @@ end
 function ServerListen()
   local event = host:service(100)
   if event then
+    print("Server detected message type: " .. event.type)
     if event.type == 'receive' then
       print('Got message: ', event.data, event.peer)
       --event.peer:send(event.data)
@@ -362,6 +363,7 @@ end
 function ClientListen()
   local event = host:service(100)
   if event then
+    print("Server detected message type: " .. event.type)
     if event.type == 'connect' then
       print('Connected to', event.peer)
       --event.peer:send('hello world')
@@ -543,7 +545,7 @@ function app:init(args)
   -- test
   setup_events()
   --set_up_physics_boxes()
-  
+
   --set up ui
   setup_menu_network()
   setup_menu_chat()

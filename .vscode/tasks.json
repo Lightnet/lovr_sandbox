@@ -1,0 +1,60 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  // https://love2d.org/wiki/love.load
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Lovr-console",
+      "type": "shell",
+      "windows": {
+        //"command": "D:/dev/lovr/lovr.exe --console ${workspaceRoot}"
+        "command": "${workspaceRoot}/lovrc.bat"
+      },
+      "linux": {
+        "command":"lovr --console ${workspaceRoot}"
+      },
+      "args": [],
+      "problemMatcher": [],
+      "group": {
+        //"kind": "build",
+        "isDefault": true
+      }//,
+      //"presentation": {
+        //"reveal": "always"
+      //}
+    },
+    {
+      "label": "Lovr",
+      "type": "shell",
+      "command": "lovr ${workspaceRoot} ",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    },
+    {
+      "label": "Lovr-server",
+      "type": "shell",
+      "command": "lovr ${workspaceRoot} server",
+      "args": [],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    },
+    {
+      "label": "Lovr-client",
+      "type": "shell",
+      "command": "lovr ${workspaceRoot} client",
+      "args": [],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    }
+  ]
+}

@@ -8,18 +8,18 @@
       "label": "Lovr-console",
       "type": "shell",
       "windows": {
-        //"command": "D:/dev/lovr/lovr.exe --console ${workspaceRoot}"
-        "command": "${workspaceRoot}/lovrc.bat"
+        //"command": "${workspaceRoot}/lovr.bat"
+        "command": "lovr --console ${workspaceRoot}"
       },
       "linux": {
         "command":"lovr --console ${workspaceRoot}"
       },
-      "args": [],
-      "problemMatcher": [],
-      "group": {
+      //"args": [],
+      "problemMatcher": []
+      //"group": {
         //"kind": "build",
-        "isDefault": true
-      }//,
+        //"isDefault": true
+      //}//,
       //"presentation": {
         //"reveal": "always"
       //}

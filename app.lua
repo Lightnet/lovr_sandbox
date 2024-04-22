@@ -102,17 +102,31 @@ local function draw_ui(pass)
   end
 end
 
+-- https://lovr.org/docs/Pass:box
+function draw_ground(pass)
+  local pos = lovr.math.vec3(0,0,0)
+  local size = lovr.math.vec3(1,1,1)
+  local rot = lovr.math.quat()
 
-app.init = function(args)
+  pass:cube(pos, size, rot, 'line')
+
+  pos.x = 1
+  pass:cube(pos, size, rot, 'line')
+end
+
+
+function app:init(args)
   
 end
 
-app.update=function(dt)
+function app:update(dt)
   update_ui()
 end
 
-app.draw=function(pass)
+function app:draw(pass)
   draw_ui(pass)
+
+  draw_ground(pass)
 end
 
 

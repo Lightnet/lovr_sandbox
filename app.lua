@@ -527,11 +527,24 @@ function menu_chat_update()
   end
 end
 
+-- https://lovr.org/docs/v0.17.0/lovr.event
+function setup_events()
+  lovr.handlers['customevent'] = function(a, b, c)
+    print('custom event handled with args:', a, b, c)
+  end
+
+  lovr.event.push('customevent', 1, 2, 3)
+end
+
 -- //////////////////////////////////////////////
 -- MAIN SECTION
 -- //////////////////////////////////////////////
 function app:init(args)
-  set_up_physics_boxes()
+  -- test
+  setup_events()
+  --set_up_physics_boxes()
+  
+  --set up ui
   setup_menu_network()
   setup_menu_chat()
 end

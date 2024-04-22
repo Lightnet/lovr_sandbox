@@ -5,8 +5,8 @@
 # Created by: Lightnet
 
 # Status:
- * testing
- * setup tests.
+ * Network tests.
+ * UI tests.
  
 # Information:
   This is 3D lovr lua scripting build test.
@@ -19,8 +19,31 @@
 
   Read more on https://lovr.org
 
-# vscode:
+# Features:
+ * Network Enet
+   * [x] simple test
+ * UI
+   * [x] network
+   * [x] chat
+   * [ ] hud
+   * [ ] inventory
+   * [ ] in game
+   * [ ] quest
+   * [ ] npc
+ * game
+   * [ ] block types
+   * [ ] player
+   * [ ] inventory
+   * [ ] World
+   * [ ] emitter
+   * [ ] npc
+   * [ ] monster
+   * [ ] boss
+
+# VSCode:
  Install Love2D Support.
+
+
  settings.json
 ```
 {
@@ -31,19 +54,31 @@
 
   Run Application.
 
-# run app:
+# Run App:
   Install program. https://lovr.org Note there is no installer. Need to set path in system variable for testing.
 
-
+Command line for current project folder.
 ```
 lovr .
 ```
 Run project dir.
 
+# File System:
+```
+Windows	C:\Users\<user>\AppData\Roaming\LOVR\<identity>
+```
+lovr.conf
+
+conf.lua
+```lua
+function lovr.conf(t)
+  t.identity = '<identity>'
+end
+```
 
 # links:
 
  - https://lovr.org/docs/v0.17.0/Plugins
  - https://tylerneylon.com/a/learn-lua/
- - 
+ - https://lovr.org/docs/v0.17.0/lovr.filesystem
  - 

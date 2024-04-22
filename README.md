@@ -6,6 +6,7 @@
 
 # Status:
  * testing
+ * setup tests.
  
 # Information:
   This is 3D lovr lua scripting build test.
@@ -19,7 +20,9 @@
   Read more on https://lovr.org
 
 # run app:
-  Install program. 
+  Install program. https://lovr.org Note there is no installer. Need to set path in system variable for testing.
+
+
 ```
 lovr .
 ```

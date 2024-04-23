@@ -15,6 +15,7 @@ function lovr.load(args)
   -- local height = lovr.system.getWindowHeight()
   -- print("Width: " .. width .. " Height: " .. height)
   -- model = lovr.graphics.newModel('assets/male_toon_block01.glb')
+  model = lovr.graphics.newModel('assets/block_blank01.glb')
   -- print('loaded!')
   app:init(args)
 end
@@ -34,8 +35,9 @@ function lovr.draw(pass)
   --pass:text('hello world', 0, 1.7, -3, .5)
   --https://lovr.org/docs/Pass:cube
   --pass:cube(0, 1.7, -1, .5, lovr.headset.getTime(), 0, 1, 0, 'line')
+  pass:cube(0, 3, -3, 1, 0, 0, 1, 0, 'line')
   --fila,x,y,z,scale
-  -- pass:draw(model, 0, 2, -3, 1)
+  pass:draw(model, 0, 2, -3, 1)
   app:draw(pass)
 end
 --clean up when exit application

@@ -148,6 +148,7 @@ local function draw_ui(pass)
 end
 
 local function draw_ui_menu(pass)
+  
 end
 
 -- //////////////////////////////////////////////
@@ -597,16 +598,18 @@ function app:update(dt)
   end
 end
 
+function plane_grid(pass)
+  pass:setColor( .1, .1, .12 )
+	pass:plane( 0, -1, 0, 25, 25, -math.pi / 2, 1, 0, 0 )
+	pass:setColor( .2, .2, .2 )
+	pass:plane( 0, -1, 0, 25, 25, -math.pi / 2, 1, 0, 0, 'line', 50, 50 )
+end
+
 function app:draw(pass)
 
-  pass:setColor( .1, .1, .12 )
-	pass:plane( 0, 0, 0, 25, 25, -math.pi / 2, 1, 0, 0 )
-	pass:setColor( .2, .2, .2 )
-	pass:plane( 0, 0, 0, 25, 25, -math.pi / 2, 1, 0, 0, 'line', 50, 50 )
-
-  local lh_pose = lovr.math.newMat4( lovr.headset.getPose( "hand/left" ) )
-	lh_pose:rotate( -math.pi / 2, 1, 0, 0 )
-
+  plane_grid(pass)
+  -- local lh_pose = lovr.math.newMat4( lovr.headset.getPose( "hand/left" ) )
+	-- lh_pose:rotate( -math.pi / 2, 1, 0, 0 )
 
   UI.NewFrame(pass)
   UI.Begin( "SecondWindow", win2pos )

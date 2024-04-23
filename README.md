@@ -81,6 +81,7 @@ end
  - https://lovr.org/docs/v0.17.0/Plugins
  - https://tylerneylon.com/a/learn-lua/
  - https://lovr.org/docs/v0.17.0/lovr.filesystem
+ - https://www.youtube.com/watch?v=dZ_X0r-49cw Love2D | Entity Component System | Episode 1
 
 # Lovr:
  - https://lovr.org/docs/Libraries
@@ -88,3 +89,4 @@ end
  - https://github.com/immortalx74/lovr-ui
  - https://github.com/mcclure/lovr-ent
  - https://github.com/jmiskovic/chui
+ - 

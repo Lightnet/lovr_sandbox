@@ -11,6 +11,10 @@
 
 UI = require "libraries/ui/ui"
 local enet = require 'enet'
+local World = require 'World'
+local Component = require 'Component'
+local System = require 'System'
+local coms = require 'common_components'
 
 local app = {}
 --state
@@ -564,10 +568,40 @@ end
 
 win2pos = lovr.math.newMat4( 0.1, 1.3, -1.3 )
 
+function new_body(x,y)
+  local body = Component.new "body"
+  body.x = x
+  body.y = y
+  return body
+end
+
+function new_rectangle_component()
+  return Component.new "rect"
+end
+
+function new_renderer_system()
+  local renderer = System.new {"body", "rect"}
+
+  function renderer:load(entity)
+    print "found one!"
+  end
+
+  function renderer:draw(entity)
+
+  end
+
+  return renderer
+end
+
 function app:init(args)
   --user module
   UI.Init()
   lovr.graphics.setBackgroundColor( 0.4, 0.4, 1 )
+  World:register(new_renderer_system())
+
+  local entity = World:create()
+  entity:add(new_body(100,100))
+  entity:add(new_rectangle_component())
 
   -- test
   --WriteTest()
@@ -581,6 +615,7 @@ end
 
 function app:update(dt)
   UI.InputInfo()
+  World:update(dt)
 
   if network_state == "server" then
     ServerListen()
@@ -606,6 +641,7 @@ function plane_grid(pass)
 end
 
 function app:draw(pass)
+  World:draw()
 
   plane_grid(pass)
   -- local lh_pose = lovr.math.newMat4( lovr.headset.getPose( "hand/left" ) )

@@ -9,15 +9,15 @@
  * UI tests.
  
 # Information:
-  This is 3D lovr lua scripting build test.
+  This is 3D Lovr lua scripting build test. Base on Love2D to Lovr for 3D. Lovr have prebuilt camera and scene for virtual reality devices. It can be disable. It just empty scene with the camera movement.
 
-  Base on Love2D to Lovr for 3D.
+  For reason to create this project is small file if possible. It size is 4.63 MB for application to run. As simalar to game Gotot Engine. But does not have editor.
 
-  For reason to create this project is small file. It size is 4.63 MB. As simalar to game gotot engine.
-
-  Lovr have prebuilt camera and scene. It just empty scene with the camera movement.
+  The smallest first person shooter game. https://en.wikipedia.org/wiki/.kkrieger
 
   Read more on https://lovr.org
+
+  Will build simple minecraft block world but not the procedure terrain generater. As well simple chat message test.
 
 # Features:
  * Network Enet
@@ -81,4 +81,10 @@ end
  - https://lovr.org/docs/v0.17.0/Plugins
  - https://tylerneylon.com/a/learn-lua/
  - https://lovr.org/docs/v0.17.0/lovr.filesystem
- - 
+
+# Lovr:
+ - https://lovr.org/docs/Libraries
+ - https://lovr.org/docs/Plugins
+ - https://github.com/immortalx74/lovr-ui
+ - https://github.com/mcclure/lovr-ent
+ - https://github.com/jmiskovic/chui

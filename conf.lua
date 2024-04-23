@@ -11,6 +11,7 @@ function lovr.conf(t)
   -- t.modules.data = true
   -- t.modules.event = true
   -- t.modules.graphics = true
+  -- https://github.com/bjornbytes/lovr/discussions/663
   -- t.modules.headset = true
   -- t.modules.math = true
   -- t.modules.physics = true

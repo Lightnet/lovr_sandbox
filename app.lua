@@ -1,11 +1,15 @@
 --[[
   application
   TODO:
-   * chat
-   * network
-   * 
+   * UI
+     * chat
+     * network
+   * player
+   * camera
+   * blocks
 ]]
 
+UI = require "libraries/ui/ui"
 local enet = require 'enet'
 
 local app = {}
@@ -251,6 +255,7 @@ function setup_menu_network()
     "Quit",
     function()
       print("Quit")
+      lovr.event.quit(0)
     end--,
     --lovr.math.newVec3(0, 0, -3)
   ))
@@ -342,6 +347,11 @@ function ServerListen()
       print(event.peer, "disconnected.")
     end
   end
+end
+
+function ServerClose()
+  --doc not seen how to close server 
+  host:flush()
 end
 
 function ServerSend()
@@ -537,12 +547,29 @@ function setup_events()
 
   lovr.event.push('customevent', 1, 2, 3)
 end
+-- C:\Users\<user>\AppData\Roaming\LOVR\<projectname>
+function WriteTest()
+  local filename = "test.txt"
+  local content = "hello world"
+  local success = lovr.filesystem.write(filename, content)
+  if success then
+    print("finish write file..." .. filename)
+  end
+end
 
 -- //////////////////////////////////////////////
 -- MAIN SECTION
 -- //////////////////////////////////////////////
+
+win2pos = lovr.math.newMat4( 0.1, 1.3, -1.3 )
+
 function app:init(args)
+  --user module
+  UI.Init()
+  lovr.graphics.setBackgroundColor( 0.4, 0.4, 1 )
+
   -- test
+  --WriteTest()
   setup_events()
   --set_up_physics_boxes()
 
@@ -552,6 +579,8 @@ function app:init(args)
 end
 
 function app:update(dt)
+  UI.InputInfo()
+
   if network_state == "server" then
     ServerListen()
   end
@@ -569,9 +598,44 @@ function app:update(dt)
 end
 
 function app:draw(pass)
+
+  pass:setColor( .1, .1, .12 )
+	pass:plane( 0, 0, 0, 25, 25, -math.pi / 2, 1, 0, 0 )
+	pass:setColor( .2, .2, .2 )
+	pass:plane( 0, 0, 0, 25, 25, -math.pi / 2, 1, 0, 0, 'line', 50, 50 )
+
+  local lh_pose = lovr.math.newMat4( lovr.headset.getPose( "hand/left" ) )
+	lh_pose:rotate( -math.pi / 2, 1, 0, 0 )
+
+
+  UI.NewFrame(pass)
+  UI.Begin( "SecondWindow", win2pos )
+	UI.TextBox( "Location", 20, "" )
+  UI.TextBox( "Profession", 20, "" )
+	if UI.Button( "Open modal window", 0, 0 ) then
+		--modal_window_open = true
+    print("click... ui button")
+	end
+
+  UI.End( pass )
+
+  --
+  --lovr.graphics.setBackgroundColor(.8, .8, .8)
   --draw_ui(pass)
   -- draw_boxes(pass)
   -- draw_ground(pass)
+  pass:text("Hello World",0,1.7,-3,0.2)
+
+  -- local x, y, z = lovr.headset.getPosition(device)
+  -- pass:text("Head: x: " .. x .. " y: " .. y .. " z: " .. z,0,2,-3,0.2)
+
+  -- for i, hand in ipairs(lovr.headset.getHands()) do
+  --   print("IDX: "..i)
+  --   print("hand: "..hand)
+  --   local x, y, z = lovr.headset.getPosition(hand)
+  --   pass:sphere(x, y, z, .01)
+  -- end
+
   if menu_state == "network" then
     menu_network_draw(pass)
   end
@@ -580,7 +644,27 @@ function app:draw(pass)
     menu_chat_draw(pass)
   end
 
-  pointer_hand(pass)
+  -- pointer_hand(pass)
+
+  --this ui/ui need for here...
+  -- lovr-ui records several passes during the frame and returns them as a table
+	local ui_passes = UI.RenderFrame( pass )
+	-- Regular drawing should be done here...
+	-- Then the default pass is appended on that table
+	table.insert( ui_passes, pass )
+	-- And finally all passes are submitted at once
+	return lovr.graphics.submit( ui_passes )
+end
+
+function app:cleanup()
+  print("clean up on quit!")
+  if network_state == "server" then
+    ServerClose()
+  end
+
+  if network_state == "client" then
+    ClientClose()
+  end
 end
 
 return app

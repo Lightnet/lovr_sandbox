@@ -38,3 +38,8 @@ function lovr.draw(pass)
   -- pass:draw(model, 0, 2, -3, 1)
   app:draw(pass)
 end
+--clean up when exit application
+function lovr.quit()
+  -- your code here
+  app:cleanup()
+end

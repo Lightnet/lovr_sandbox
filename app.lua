@@ -234,8 +234,12 @@ end
 -- //////////////////////////////////////////////
 -- NETWORK
 -- //////////////////////////////////////////////
-
+--var need to top else error for nil
 local net_buttons = {}
+local host = nil
+local server = nil
+local enet_server = {}
+local enet_client = {}
 
 function setup_menu_network()
   table.insert(net_buttons,uiButton(
@@ -243,7 +247,7 @@ function setup_menu_network()
     function()
       print("Host")
       menu_state="chat"
-      setup_server()
+      enet_server:setup()
     end,
     lovr.math.newVec3(0, 1.0, -3)
   ))
@@ -252,7 +256,7 @@ function setup_menu_network()
     function()
       print("Join")
       menu_state="chat"
-      setup_client()
+      enet_client:setup()
     end,
     lovr.math.newVec3(0, 0.5, -3)
   ))
@@ -330,21 +334,18 @@ function menu_network_update()
     end
   end
 end
-
-local host = nil
-local server = nil
-
-function setup_server()
+-- SERVER
+function enet_server:setup()
   host = enet.host_create('localhost:6789')
   network_state = "server"
 end
 
-function ServerListen()
+function enet_server:listen()
   local event = host:service(100)
   if event then
     print("Server detected message type: " .. event.type)
     if event.type == 'receive' then
-      print('Got message: ', event.data, event.peer)
+      print('Got message: ', event.data, event.peer, " Time:", os.date():sub(9))
       --event.peer:send(event.data)
     elseif event.type == "connect" then
       print(event.peer, "connected.")
@@ -354,28 +355,34 @@ function ServerListen()
   end
 end
 
-function ServerClose()
-  --doc not seen how to close server 
+function enet_server:close()
+  for peerIndex = 1, host:peer_count() do
+    local peer = host:get_peer(peerIndex)
+    if peer then
+      peer:disconnect()--send out client for server close.
+    end
+  end
+  --doc not seen how to close server
   host:flush()
 end
 
-function ServerSend()
+function enet_server:send(msg)
   print(host)
   for peerIndex = 1, host:peer_count() do
     local peer = host:get_peer(peerIndex)
     if peer then
-      peer:send("Hi")
+      peer:send(msg)
     end
   end
 end
-
-function setup_client()
+-- CLIENT
+function enet_client:setup()
   host = enet.host_create()
   server = host:connect('localhost:6789')
   network_state = "client"
 end
 
-function ClientListen()
+function enet_client:listen()
   local event = host:service(100)
   if event then
     print("Server detected message type: " .. event.type)
@@ -383,7 +390,7 @@ function ClientListen()
       print('Connected to', event.peer)
       --event.peer:send('hello world')
     elseif event.type == 'receive' then
-      print('Got message: ', event.data, event.peer)
+      print('Got message: ',  event.data, event.peer, " Time:", os.date():sub(9))
       --done = true
     elseif event.type == "disconnect" then
       print(event.peer, "disconnected.")
@@ -391,22 +398,22 @@ function ClientListen()
   end
 end
 
-function ClientClose()
+function enet_client:close()
   server:disconnect()
   host:flush()
 end
 
-function ClientSend()
+function enet_client:send(msg)
   host:service(100)
-  server:send("Hi")
+  server:send(msg)
 end
 
-function NetworkSend()
+function NetworkSend(msg)
   if network_state == "server" then
-    ServerSend()
+    enet_server:send(msg)
   end
   if network_state == "client" then
-    ClientSend()
+    enet_client:send(msg)
   end
 end
 -- //////////////////////////////////////////////
@@ -438,7 +445,8 @@ function setup_menu_chat()
   table.insert(chat_buttons,uiButton(
     "Ping",
     function()
-      print("Ping")
+      print("Ping ME")
+      NetworkSend("ping test")
     end,
     lovr.math.newVec3(0, 1.0, -3)
   ))
@@ -446,8 +454,8 @@ function setup_menu_chat()
   table.insert(chat_buttons,uiButton(
     "Send",
     function()
-      print("Ping")
-      NetworkSend()
+      print("Send ME")
+      NetworkSend("send test")
     end,
     lovr.math.newVec3(0, 0.5, -3)
   ))
@@ -568,17 +576,6 @@ end
 
 win2pos = lovr.math.newMat4( 0.1, 1.3, -1.3 )
 
-function new_body(x,y)
-  local body = Component.new "body"
-  body.x = x
-  body.y = y
-  return body
-end
-
-function new_rectangle_component()
-  return Component.new "rect"
-end
-
 function new_renderer_system()
   local renderer = System.new {"body", "rect"}
 
@@ -600,8 +597,8 @@ function app:init(args)
   World:register(new_renderer_system())
 
   local entity = World:create()
-  entity:add(new_body(100,100))
-  entity:add(new_rectangle_component())
+  entity:add(coms.new_body(100,100))
+  entity:add(coms.new_rectangle_component())
 
   -- test
   --WriteTest()
@@ -618,10 +615,10 @@ function app:update(dt)
   World:update(dt)
 
   if network_state == "server" then
-    ServerListen()
+    enet_server:listen()
   end
   if network_state == "client" then
-    ClientListen()
+    enet_client:listen()
   end
   --update_ui()
   -- update_physics_boxes(dt)
@@ -698,11 +695,11 @@ end
 function app:cleanup()
   print("clean up on quit!")
   if network_state == "server" then
-    ServerClose()
+    enet_server:close()
   end
 
   if network_state == "client" then
-    ClientClose()
+    enet_client:close()
   end
 end
 

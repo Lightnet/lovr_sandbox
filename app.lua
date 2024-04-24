@@ -16,6 +16,8 @@ local Component = require 'Component'
 local System = require 'System'
 local coms = require 'common_components'
 
+local terrain_blocks = {}
+
 local app = {}
 --state
 local menu_state = "network"
@@ -600,6 +602,9 @@ function app:init(args)
   entity:add(coms.new_body(100,100))
   entity:add(coms.new_rectangle_component())
 
+  terrain_blocks.dirt = lovr.graphics.newModel('assets/block_dirt01.glb')
+  terrain_blocks.grass = lovr.graphics.newModel('assets/block_grass01.glb')
+
   -- test
   --WriteTest()
   setup_events()
@@ -638,7 +643,11 @@ function plane_grid(pass)
 end
 
 function app:draw(pass)
+
   World:draw()
+  pass:setSampler('nearest')
+  pass:draw(terrain_blocks.dirt, 0, 2, -3, 1)
+  pass:draw(terrain_blocks.grass, 1, 2, -3, 1)
 
   plane_grid(pass)
   -- local lh_pose = lovr.math.newMat4( lovr.headset.getPose( "hand/left" ) )

@@ -25,10 +25,10 @@ function lovr.conf(t)
   -- t.audio.start = true
 
   -- -- Graphics
-  -- t.graphics.debug = false
+  t.graphics.debug = false
   -- t.graphics.vsync = true
-  -- t.graphics.stencil = false
-  -- t.graphics.antialias = true
+  t.graphics.stencil = false
+  t.graphics.antialias = true
   -- t.graphics.shadercache = true
 
   -- -- Headset settings
